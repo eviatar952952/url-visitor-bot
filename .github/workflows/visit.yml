@@ -1,9 +1,13 @@
 name: Auto Generate AI Summaries
 
 on:
+  # Triggered when new email arrives via webhook
+  repository_dispatch:
+    types: [new-email]
+
+  # Backup: Run once a day at 8 AM Israel time (in case webhook fails)
   schedule:
-    - cron: '0 */6 * * *'  # כל 6 שעות
-  workflow_dispatch:  # אפשרות להריץ ידנית
+    - cron: '0 5 * * *'  # 5 AM UTC = 8 AM Israel
 
 jobs:
   trigger-ai-function:
@@ -13,15 +17,14 @@ jobs:
       - name: Trigger AI Summary Generation
         run: |
           echo "🤖 Triggering AI summary generation..."
+          echo "Event: ${{ github.event_name }}"
 
           response=$(curl -s -X POST \
-            -H "Content-Type: application/json" \
             -H "X-API-Key: ${{ secrets.AUTO_AI_SECRET_KEY }}" \
-            https://hanahotplus-jlm.base44.app/functions/autoGenerateAISummariesMake)
+            "https://hanahotplus-jlm.base44.app/functions/autoGenerateAISummariesMake")
 
           echo "📊 Response:"
           echo "$response"
 
       - name: Complete
-        run: |
-          echo "✅ Function execution completed"
+        run: echo "✅ Function execution completed"
