@@ -1,21 +1,29 @@
-name: Visit URL on Schedule
+name: Auto Generate AI Summaries
+
 on:
   schedule:
-    # Runs approximately every 5 hours
-    - cron: '0 */5 * * *'
-  workflow_dispatch: # Allows you to run this workflow manually
+    # Runs on a custom schedule based on Israel time (UTC+3)
+    # Every hour from 8am-5pm, plus 8pm and midnight Israel time.
+    - cron: '0 5-14,17,21 * * *'
+  workflow_dispatch:  # Allows you to run this workflow manually
 
 jobs:
-  visit-the-site:
+  trigger-ai-function:
     runs-on: ubuntu-latest
+    
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-      - name: Install dependencies
-        run: npm install
-      - name: Run the visit script
-        run: npm start
+      - name: Trigger AI Summary Generation
+        run: |
+          echo "🤖 Triggering AI summary generation..."
+          
+          response=$(curl -s -X POST \
+            -H "Content-Type: application/json" \
+            -H "X-API-Key: ${{ secrets.AUTO_AI_SECRET_KEY }}" \
+            https://hanahotplus-jlm.base44.app/functions/autoGenerateAISummariesMake)
+          
+          echo "📊 Response:"
+          echo "$response"
+          
+      - name: Complete
+        run: |
+          echo "✅ Function execution completed"
