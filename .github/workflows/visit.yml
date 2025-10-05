@@ -1,0 +1,21 @@
+name: Visit URL on Schedule
+on:
+  schedule:
+    # Runs approximately every 5 hours
+    - cron: '0 */5 * * *'
+  workflow_dispatch: # Allows you to run this workflow manually
+
+jobs:
+  visit-the-site:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install dependencies
+        run: npm install
+      - name: Run the visit script
+        run: npm start
