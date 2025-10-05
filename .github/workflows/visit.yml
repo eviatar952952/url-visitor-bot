@@ -3,23 +3,23 @@ name: Auto Generate AI Summaries
 on:
   schedule:
     - cron: '0 */6 * * *'  # כל 6 שעות
-  workflow_dispatch:  # אפשרות להריץ ידנית
+  workflow_dispatch:
 
 jobs:
   trigger-ai-function:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Call Auto AI Function
+      - name: Call AI Summary Function
         run: |
           echo "🤖 Triggering AI summary generation..."
 
-          response=$(curl -s -X GET \
-            "https://hanahotplus-jlm.base44.app/functions/autoTriggerAI?key=${{ secrets.AUTO_AI_SECRET_KEY }}")
+          response=$(curl -s -X POST \
+            "https://hanahotplus-jlm.base44.app/functions/autoGenerateAISummariesMake?key=${{ secrets.AUTO_AI_SECRET_KEY }}")
 
           echo "📊 Response:"
           echo "$response"
 
-      - name: Check Success
+      - name: Verify Success
         run: |
           echo "✅ Function execution completed"
