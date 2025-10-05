@@ -1,21 +1,17 @@
-name: Visit URL on Schedule
+name: Trigger AI Summary on Schedule
 on:
   schedule:
-    # Runs approximately every 5 hours
+    # מריץ כל 5 שעות, כמו שהגדרנו קודם
     - cron: '0 */5 * * *'
-  workflow_dispatch: # This line is CRITICAL for the manual run button
+  workflow_dispatch: # מאפשר הפעלה ידנית
 
 jobs:
-  visit-the-site:
+  trigger-ai-function:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-      - name: Install dependencies
-        run: npm install
-      - name: Run the visit script
-        run: npm start
+      - name: Trigger AI Summary Function and Show Response
+        run: |
+          echo "Calling the AI function..."
+          curl -X GET https://hanahotplus-jlm.base44.app/functions/triggerAutoAISummary
+          echo ""
+          echo "Function call completed."
